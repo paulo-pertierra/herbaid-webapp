@@ -6,41 +6,30 @@
       <v-spacer></v-spacer>
       <v-btn prepend-icon="mdi-account" @click="loginDialog = true">Login
         <v-dialog v-model="loginDialog">
-          <v-card max-width="500" class="mx-auto">
+          <v-card title="Login" max-width="500" min-width="360" class="mx-auto">
             <v-card-text>
               <v-form ref="form" v-model="valid" lazy-validation>
-                <v-text-field v-model="name" :counter="10" :rules="nameRules" label="Name" required></v-text-field>
+                <v-text-field v-model="name" label="Name" required></v-text-field>
 
-                <v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+                <v-text-field v-model="email" label="E-mail" required></v-text-field>
 
-                <v-select v-model="select" :items="items" :rules="[v => !!v || 'Item is required']" label="Item"
-                  required></v-select>
+                <v-text-field v-model="password" label="Password" required></v-text-field>
 
-                <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']"
-                  label="Do you agree?" required></v-checkbox>
-
-                <v-btn color="success" class="me-4" @click="validate">
-                  Validate
+                <v-btn color="success" class="mx-auto mb-5" width="100%" @click="validate">
+                  Log In
                 </v-btn>
 
-                <v-btn color="error" class="me-4" @click="reset">
-                  Reset Form
-                </v-btn>
-
-                <v-btn color="warning" @click="resetValidation">
-                  Reset Validation
-                </v-btn>
               </v-form>
             </v-card-text>
-            <v-card-actions>
+            <!-- <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn variant="text" @click="loginDialog = false">
                 Close
               </v-btn>
-              <v-btn variant="text" @click="loginDialog = false">
-                Save
+              <v-btn variant="text" @click="login">
+                Log In
               </v-btn>
-            </v-card-actions>
+            </v-card-actions> -->
           </v-card>
         </v-dialog>
       </v-btn>
@@ -52,25 +41,29 @@
         <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
           <v-list-item>
             <v-list-item-title>
-              <RouterLink style="text-decoration: none; color: inherit;" to="/">News Feed</RouterLink>
+              <v-icon class="mr-2">mdi-post</v-icon>
+              <RouterLink style="text-decoration: none; color: inherit; font-size: 1.2em;" to="/">News Feed</RouterLink>
             </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-title>
-              <RouterLink style="text-decoration: none; color: inherit;" to="/remedies">Remedies Directory</RouterLink>
+              <v-icon class="mr-2">mdi-sprout</v-icon>
+              <RouterLink style="text-decoration: none; color: inherit; font-size: 1.2em;" to="/remedies">Remedies Directory</RouterLink>
             </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-title>
-              <RouterLink style="text-decoration: none; color: inherit;" to="/doctors">Doctors Directory</RouterLink>
+              <v-icon class="mr-2">mdi-doctor</v-icon>
+              <RouterLink style="text-decoration: none; color: inherit; font-size: 1.2em;" to="/doctors">Doctors Directory</RouterLink>
             </v-list-item-title>
           </v-list-item>
 
           <v-list-item>
             <v-list-item-title>
-              <RouterLink style="text-decoration: none; color: inherit;" to="/about">About Us</RouterLink>
+              <v-icon class="mr-2">mdi-information</v-icon>
+              <RouterLink style="text-decoration: none; color: inherit; font-size: 1.2em;" to="/about">About Us</RouterLink>
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>

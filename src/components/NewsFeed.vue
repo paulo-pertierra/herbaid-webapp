@@ -1,3 +1,3 @@
 <template>
-  <p>News Feed</p>
+  <h1>News Feed</h1>
 </template>
