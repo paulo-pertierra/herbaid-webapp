@@ -6,33 +6,9 @@
       <v-spacer></v-spacer>
       <v-btn prepend-icon="mdi-account" @click="loginDialog = true">Login
         <v-dialog v-model="loginDialog">
-          <v-card title="Login" max-width="500" min-width="360" class="mx-auto">
-            <v-card-text>
-              <v-form ref="form" v-model="valid" lazy-validation>
-                <v-text-field v-model="name" label="Name" required></v-text-field>
-
-                <v-text-field v-model="email" label="E-mail" required></v-text-field>
-
-                <v-text-field v-model="password" label="Password" required></v-text-field>
-
-                <v-btn color="success" class="mx-auto mb-5" width="100%" @click="validate">
-                  Log In
-                </v-btn>
-
-              </v-form>
-            </v-card-text>
-            <!-- <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn variant="text" @click="loginDialog = false">
-                Close
-              </v-btn>
-              <v-btn variant="text" @click="login">
-                Log In
-              </v-btn>
-            </v-card-actions> -->
-          </v-card>
+          <LoginView />
         </v-dialog>
-      </v-btn>
+    </v-btn>
       <v-btn :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" @click="onClick">
         Theme</v-btn>
     </v-app-bar>
@@ -79,6 +55,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import LoginView from './views/LoginView.vue';
 
 // START Theming
 const theme = ref('light')
@@ -102,5 +79,6 @@ watch((group) => {
 //START Login Form
 const loginDialog = ref(false)
 //END Login Form
+
 </script>
 
