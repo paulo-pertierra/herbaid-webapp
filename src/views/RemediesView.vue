@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-  import RemedyFeed from '@/components/RemedyFeed.vue'
+import RemedyFeed from "@/components/RemedyFeed.vue";
 </script>
