@@ -1,50 +1,43 @@
 <script setup>
+import { ref, watch, onMounted } from "vue";
+
 import RemedyEntry from "./RemedyEntry.vue";
 import RemedyQueried from "./RemedyQueried.vue";
-import Swal from 'sweetalert2'
-import { ref, watch } from "vue";
 
 import { useRemedyStore } from "@/store/app";
 const store = useRemedyStore();
 
-store.getRemedies();
-const loading = ref(true)
+//OnMounted
+onMounted(()=> {
+  store.getRemedies();
+  currentPage.value = store.currentPage
+})
 
-const currentPage = ref();
+//Pagination ugly fix, I have to know how to get Pinia
+//state keys instead of the entire state. 🤮
+const currentPage = ref()
 watch(currentPage, (newPage) => {
   store.currentPage = newPage;
-  store.getRemedies();
+  store.getRemedies()
 });
 
-const querystr = ref();
-
-
-watch(querystr, (newValue) => {
-  if (!newValue.length) {
+//Not so elegant search box function using Pinia
+watch(store, () => {
+  store.loading = false;
+  if (!store.querystring.length) {
     store.showAllRemedies = true;
   } else {
-    store.querystring = newValue;
-    console.log(store.querystring);
-    loading.value = false;
+    store.loading = false;
   }
 });
-watch(store, ()=> {
-  loading.value = false
-})
 </script>
 
 <template>
   <h1 class="text-center my-5">Remedies Feed</h1>
-  <!-- <input type="text" v-model="querystr" /><button
-    class="sortbutton"
-    @click="store.getQueriedRemedies()"
-  >
-    Search
-  </button> -->
   <div class="search">
     <v-text-field
       rounded
-      v-model="querystr"
+      v-model="store.querystring"
       append-icon="mdi-magnify"
       label="Search"
       single-line
@@ -53,12 +46,10 @@ watch(store, ()=> {
     ></v-text-field>
   </div>
 
-  <div v-if="loading" class="d-flex justify-center my-5">
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
+  <div v-if="store.loading" class="d-flex justify-center my-5">
+    <v-progress-circular indeterminate color="primary"></v-progress-circular>
   </div>
+
   <div v-else-if="store.showAllRemedies">
     <RemedyEntry
       v-for="remedy in store.remedies"
@@ -67,10 +58,10 @@ watch(store, ()=> {
       :carousel="remedy.attributes.carousel.data"
     />
     <v-pagination
-    v-model="currentPage"
-    :length="store.pageCount"
-    circle
-  ></v-pagination>
+      v-model="currentPage"
+      :length="store.pageCount"
+      circle
+    ></v-pagination>
   </div>
   <div v-else>
     <RemedyQueried

@@ -48,6 +48,7 @@ export const useRemedyStore = defineStore("remedy", {
       currentPage: 1,
 
       showAllRemedies: true,
+      loading: true,
       queriedremedies: [],
       querystring: "",
     };
@@ -62,37 +63,54 @@ export const useRemedyStore = defineStore("remedy", {
         )
         .then((response) => {
           this.remedies = response.data.data;
-          this.pageCount = response.data.meta.pagination.pageCount
+          this.pageCount = response.data.meta.pagination.pageCount;
         });
     },
     getQueriedRemedies() {
-      axios.get("/fuzzy-search/search?query=" + this.querystring).then((response) => {
-        this.queriedremedies = response.data.remedies;
-        console.log(response.data.remedies);
-        if (this.queriedremedies.length) {
-          this.showAllRemedies = false
-          console.log("Success?")
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'No Results Found!',
-            text: 'Sorry, no results found.',
-          })
-          this.showAllRemedies = true
-        }
-      });
-    }
+      axios
+        .get("/fuzzy-search/search?query=" + this.querystring)
+        .then((response) => {
+          this.queriedremedies = response.data.remedies;
+          console.log(response.data.remedies);
+          if (this.queriedremedies.length) {
+            this.showAllRemedies = false;
+            console.log("Success?");
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "No Results Found!",
+              text: "Sorry, no results found.",
+            });
+            this.showAllRemedies = true;
+            this.querystring = "";
+          }
+        });
+    },
   },
   persist: false,
 });
 
-// const remedies = ref([]);
-// const pageCount = ref(0);
-// const currentPage = ref(1);
-// function getRemedies() {
-//   axios.get("/remedies?pagination[page]=" + currentPage.value + "&pagination[pageSize]=5&populate=carousel").then((response) => {
-//     remedies.value = response.data.data;
-//     pageCount.value = response.data.meta.pagination.pageCount
-//   });
-// }
-// getRemedies()
+export const useArticleStore = defineStore("article", {
+  state: () => {
+    return {
+      articles: [],
+      currentPage: 1,
+      pageCount: null,
+      loading: true,
+    };
+  },
+  actions: {
+    getArticles() {
+      axios
+        .get(
+          "/articles?pagination[page]=" +
+            this.currentPage +
+            "&pagination[pageSize]=5&sort=createdAt:desc"
+        )
+        .then((response) => {
+          this.articles = response.data.data;
+          this.pageCount = response.data.meta.pagination.pageCount;
+        });
+    },
+  },
+});
