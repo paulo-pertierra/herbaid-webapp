@@ -8,17 +8,18 @@ import { useRemedyStore } from "@/store/app";
 const store = useRemedyStore();
 
 //OnMounted
-onMounted(()=> {
+onMounted(() => {
   store.getRemedies();
-  currentPage.value = store.currentPage
-})
+  currentPage.value = store.currentPage;
+});
 
 //Pagination ugly fix, I have to know how to get Pinia
 //state keys instead of the entire state. 🤮
-const currentPage = ref()
+const currentPage = ref();
 watch(currentPage, (newPage) => {
   store.currentPage = newPage;
-  store.getRemedies()
+  store.getRemedies();
+  window.scrollTo(0, 0);
 });
 
 //Not so elegant search box function using Pinia
@@ -28,6 +29,7 @@ watch(store, () => {
     store.showAllRemedies = true;
   } else {
     store.loading = false;
+    window.scrollTo(0, 0);
   }
 });
 </script>

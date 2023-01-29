@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
 import formatter from '@/plugins/formatter';
 const props = defineProps(['title', 'author', 'created', 'content'])
 </script>
