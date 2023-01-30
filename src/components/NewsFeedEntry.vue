@@ -1,6 +1,41 @@
 <script setup>
-import formatter from '@/plugins/formatter';
-const props = defineProps(['title', 'author', 'created', 'content'])
+import { ref,reactive } from "vue";
+import formatter from "@/plugins/formatter";
+import NewsFeedComment from "./NewsFeedComment.vue";
+import axios from "axios";
+
+//START User Session
+const loggedin = ref(false);
+const credentials = JSON.parse(localStorage.getItem("user"))
+try { //I feel dirty again
+if (credentials.user.bearer.length) {
+  loggedin.value = true;
+}
+} catch {
+  loggedin.value = false
+}
+//END User Session
+
+const props = defineProps(["title", "id", "author", "created", "content"]);
+
+console.log(props.id);
+
+const comments = ref();
+axios
+  .get("/comments/api::article.article:" + props.id + "/flat")
+  .then((response) => {
+    comments.value = response.data.data;
+  });
+const displayComments = reactive({
+  text: "Show",
+  mode: false
+})
+
+
+function toggleComments() {
+  displayComments.text = displayComments.text === "Hide" ? "Show" : "Hide"
+  displayComments.mode = displayComments.mode === true ? false : true
+}
 </script>
 
 <template>
@@ -16,8 +51,32 @@ const props = defineProps(['title', 'author', 'created', 'content'])
     </div>
     <hr class="my-1" />
     <div class="content" v-html="content"></div>
-
-    <!-- Comments Section -->
+    
+    <div v-if="loggedin">
+      <h3 class="my-3">Comments: <v-btn @click="toggleComments()">{{ displayComments.text }}</v-btn></h3>
+      <!-- Comments Section -->
+      <NewsFeedComment
+      v-if="displayComments.mode"
+        v-for="comment in comments"
+        :author="comment.author.name"
+        :id="comment.author.id"
+        :created="comment.createdAt"
+        :content="comment.content"
+      />
+      <v-responsive v-if="displayComments.mode">
+        <div class="d-flex justify-space-between">
+          <v-text-field label="Comment Here" variant="outlined" class="my-2"></v-text-field>
+          <v-card-actions
+            ><v-btn class="mb-2 mt-n4 d-flex mr-auto" color="green" prepend-icon="mdi-comment" variant="outlined" height="56"
+              >Submit</v-btn
+            ></v-card-actions
+          >
+        </div>
+      </v-responsive>
+    </div>
+    <div class="mt-5 mx-auto text-center" v-else>
+      <h3>Log in to view and add comments!</h3>
+    </div>
   </v-responsive>
 </template>
 

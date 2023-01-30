@@ -1,6 +1,6 @@
 // Utilities
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -23,18 +23,42 @@ export const useThemeStore = defineStore("theme", {
 export const useUserAuthStore = defineStore("user", {
   state: () => {
     return {
-      user: ref({}),
+      user: reactive({}),
+      error: "",
     };
   },
   actions: {
-    userLogin(username, email, bearer, userid) {
+    userLogin(username, bearer, userid) {
       this.user.username = username;
-      this.user.email = email;
       this.user.bearer = bearer;
       this.user.userid = userid;
     },
+    submitLogin(id, pass) {
+      axios
+        .post("/auth/local", {
+          identifier: id,
+          password: pass,
+        })
+        .then((response) => {
+          this.user.username = response.data.user.username;
+          this.user.bearer = response.data.jwt;
+          this.user.id = response.data.user.id;
+          location.reload();
+        })
+        .catch((error) => {
+          let errormsg;
+          console.log();
+          try {
+            errormsg = error.response.data.error.details.errors[0].message;
+          } catch {
+            errormsg = error.response.data.error.message;
+          }
+          this.error = errormsg
+        });
+    },
     userLogout() {
       localStorage.removeItem("user");
+      location.reload()
     },
   },
   persist: true,

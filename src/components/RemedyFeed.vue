@@ -40,7 +40,6 @@ watch(store, () => {
     <v-text-field
       rounded
       v-model="store.querystring"
-      append-icon="mdi-magnify"
       label="Search"
       single-line
       hide-details

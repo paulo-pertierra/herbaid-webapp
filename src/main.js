@@ -14,7 +14,13 @@ import { registerPlugins } from '@/plugins'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+const user = JSON.parse(localStorage.getItem('user'))
 axios.defaults.baseURL = import.meta.env.VITE_API
+try {
+axios.defaults.headers.common['Authorization'] = `Bearer ${user.user.bearer}`;
+} catch {
+  
+}
 const app = createApp(App)
 registerPlugins(app)
 

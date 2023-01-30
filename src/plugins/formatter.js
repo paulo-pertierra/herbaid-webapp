@@ -22,7 +22,7 @@ export default function formatter(date) {
     } else if (dateFormatter.format(date) == dateFormatter.format(yesterday)) {
       return "Yesterday at " + timeFormatter.format(date);
     } else {
-      return dateFormatter.format(date) + " @ " + timeFormatter.format(date);
+      return dateFormatter.format(date) + " at " + timeFormatter.format(date);
     }
   }
   function getHumanFriendlyDelta(iso8601_date_string) {

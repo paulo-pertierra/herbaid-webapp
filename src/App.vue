@@ -5,13 +5,26 @@ import LoginView from "./views/LoginView.vue";
 import SignupView from "./views/SignUpView.vue";
 
 import { useThemeStore } from "./store/app"; //I wanted a persisted theme
+import { useUserAuthStore } from "./store/app";
+//START User session
+const user = useUserAuthStore();
+const loggedin = ref(false);
+const credentials = JSON.parse(localStorage.getItem("user"))
 
+try { //I feel dirty
+if (credentials.user.bearer.length) {
+  loggedin.value = true;
+}
+} catch {
+  loggedin.value = false
+}
+//END User Session
 //START Theming
-const theme = useThemeStore()
+const theme = useThemeStore();
 function changeTheme() {
-  theme.changeTheme()
-  console.log(theme.mode)
-  console.log(theme.color)
+  theme.changeTheme();
+  console.log(theme.mode);
+  console.log(theme.color);
 }
 //END Theming
 
@@ -42,20 +55,37 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
         ><h3>Herbal Aid</h3></v-app-bar-title
       >
       <v-spacer></v-spacer>
-      <v-btn prepend-icon="mdi-account" @click="loginDialog = true"
-        >Login
-        <v-dialog v-model="loginDialog">
-          <LoginView />
-        </v-dialog>
-      </v-btn>
+      <div v-if="!loggedin">
+        <v-btn prepend-icon="mdi-account" @click="loginDialog = true"
+          >Login
+          <v-dialog v-model="loginDialog">
+            <LoginView />
+          </v-dialog>
+        </v-btn>
+        <v-btn prepend-icon="mdi-account-star" @click="signupDialog = true"
+          >Sign Up
+          <v-dialog v-model="signupDialog">
+            <SignupView />
+          </v-dialog>
+        </v-btn>
+      </div>
+      <div v-else>
+        <v-menu open-on-hover>
+          <template v-slot:activator="{ props }">
+            <v-btn :color="theme.mode" v-bind="props"
+              ><v-icon size="x-large">mdi-account-circle</v-icon></v-btn
+            >
+          </template>
 
-      <v-btn prepend-icon="mdi-account-star" @click="signupDialog = true"
-        >Sign Up
-        <v-dialog v-model="signupDialog">
-          <SignupView />
-        </v-dialog>
-      </v-btn>
-
+          <v-list>
+            <v-list-item>
+              <v-list-item-title class="clickable" @click="user.userLogout()"
+                >Log Out</v-list-item-title
+              >
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
       <v-btn
         :prepend-icon="
           theme.mode === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'
@@ -157,3 +187,9 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
     </v-footer>
   </v-app>
 </template>
+
+<style>
+.clickable:hover {
+  cursor: pointer;
+}
+</style>

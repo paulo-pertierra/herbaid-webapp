@@ -28,6 +28,7 @@ watch(store, ()=> {
   <NewsFeedEntry 
     v-for="article in store.articles"
     :key="article.id"
+    :id="article.id"
     :title="article.attributes.title"
     :author="article.attributes.author"
     :created="article.attributes.createdAt"
