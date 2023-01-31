@@ -7,7 +7,7 @@ const props = defineProps(["carousel", "name", "content"]);
 <template>
   <v-card class="mx-auto my-5" max-width="1100" elevation="4">
     <v-card-title>
-      <h3 class="my-2 mx-auto text-center"> {{ name }}</h3>
+      <h4 class="my-2 mx-auto text-center text-truncate"> {{ name }}</h4>
     </v-card-title>
 
       <v-carousel cycle height="100%" hide-delimiters show-arrows="hover">

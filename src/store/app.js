@@ -81,10 +81,10 @@ export const useRemedyStore = defineStore("remedy", {
     };
   },
   actions: {
-    getRemedies() {
+    getRemedies(locale) {
       axios
         .get(
-          "/remedies?pagination[page]=" +
+          "/remedies?locale="+locale+"&pagination[page]=" +
             this.currentPage +
             "&pagination[pageSize]=10&populate=carousel"
         )
@@ -94,9 +94,9 @@ export const useRemedyStore = defineStore("remedy", {
           this.loading = false;
         });
     },
-    getQueriedRemedies() {
+    getQueriedRemedies(locale) {
       axios
-        .get("/fuzzy-search/search?query=" + this.querystring)
+        .get("/fuzzy-search/search?query=" + this.querystring+"&locale="+ locale)
         .then((response) => {
           this.queriedremedies = response.data.remedies;
           console.log(response.data.remedies);
@@ -130,10 +130,10 @@ export const useArticleStore = defineStore("article", {
     };
   },
   actions: {
-    getArticles() {
+    getArticles(locale) {
       axios
         .get(
-          "/articles?pagination[page]=" +
+          "/articles?locale="+ locale +"&pagination[page]=" +
             this.currentPage +
             "&pagination[pageSize]=5&sort=createdAt:desc"
         )
@@ -174,3 +174,25 @@ export const useDoctorStore = defineStore("doctor", {
     },
   },
 });
+
+export const useLocaleStore = defineStore("locale", {
+  state: ()=> {
+    return {
+      locale: "en",
+      locales: [],
+    }
+  },
+  actions: {
+    getLocales() {
+      axios
+        .get("/i18n/locales")
+        .then((response)=> {
+          this.locales = response.data
+        })
+    },
+    changeLocale(newLocale) {
+      this.locale = newLocale
+    }
+  },
+  persist: true
+})

@@ -4,15 +4,16 @@ import { ref, watch, onMounted } from "vue";
 import RemedyEntry from "./RemedyEntry.vue";
 import RemedyQueried from "./RemedyQueried.vue";
 
-import { useThemeStore } from "@/store/app";
+import { useLocaleStore, useThemeStore } from "@/store/app";
 import { useRemedyStore } from "@/store/app";
 
+const i18n = useLocaleStore()
 const theme = useThemeStore();
 const store = useRemedyStore();
 
 //OnMounted
 onMounted(() => {
-  store.getRemedies();
+  store.getRemedies(i18n.locale);
   currentPage.value = store.currentPage;
 });
 
@@ -22,7 +23,7 @@ const currentPage = ref();
 watch(currentPage, (newPage) => {
   store.loading = true;
   store.currentPage = newPage;
-  store.getRemedies();
+  store.getRemedies(i18n.locale);
   window.scrollTo(0, 0);
 });
 
@@ -35,6 +36,11 @@ watch(store, () => {
     window.scrollTo(0, 0);
   }
 });
+watch(i18n, ()=> {
+  store.getRemedies(i18n.locale)
+  store.currentPage = 1;
+  currentPage.value = 1;
+})
 </script>
 
 <template>
@@ -46,7 +52,7 @@ watch(store, () => {
       label="Search"
       single-line
       hide-details
-      @keyup.enter="store.getQueriedRemedies()"
+      @keyup.enter="store.getQueriedRemedies(i18n.locale)"
     ></v-text-field>
   </div>
 

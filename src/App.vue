@@ -5,12 +5,14 @@ import LoginView from "./views/LoginView.vue";
 import SignupView from "./views/SignUpView.vue";
 
 import { useThemeStore } from "./store/app"; //I wanted a persisted theme
-import { useUserAuthStore } from "./store/app";
+import { useUserAuthStore, useLocaleStore } from "./store/app";
+import store from "./store";
 //START User session
 const user = useUserAuthStore();
 const loggedin = ref(false);
 const credentials = JSON.parse(localStorage.getItem("user"))
-
+const i18n = useLocaleStore();
+i18n.getLocales()
 try { //I feel dirty
 if (credentials.user.bearer.length) {
   loggedin.value = true;
@@ -45,6 +47,11 @@ watch((group) => {
 //START Footer
 const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
 //END Footer
+
+
+//START Locale
+
+//END Locale
 </script>
 
 <template>
@@ -148,6 +155,14 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
     </v-navigation-drawer>
     <v-main>
       <v-container>
+        <div class="d-flex justify-content">
+          <h3 class="mx-auto">Languages</h3>
+        </div>
+        <div class="d-flex justify-center">
+          <v-btn class="mx-4 my-4" v-for="locale in i18n.locales" @click="i18n.changeLocale(locale.code)">
+            {{ locale.name }}
+          </v-btn>
+        </div>
         <router-view />
       </v-container>
     </v-main>

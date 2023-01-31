@@ -1,27 +1,34 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import NewsFeedEntry from './NewsFeedEntry.vue';
-import { useArticleStore } from '@/store/app';
+import { useArticleStore, useLocaleStore } from '@/store/app';
 
 import { useThemeStore } from '@/store/app';
 
 const theme = useThemeStore();
 const store = useArticleStore();
+const i18n = useLocaleStore();
+i18n.getLocales()
 
+store.getArticles("en")
 onMounted(()=> {
-  store.getArticles()
   store.loading = true;
 })
 
 const currentPage = ref()
 watch(currentPage, (newPage) => {
   store.currentPage = newPage;
-  store.getArticles()
+  store.getArticles(i18n.locale)
   store.loading = true;
 });
 
 watch(store, ()=> {
   window.scrollTo(0,0);
+})
+
+watch(i18n, ()=> {
+  store.getArticles(i18n.locale)
+  console.log("change")
 })
 </script>
 <template>
