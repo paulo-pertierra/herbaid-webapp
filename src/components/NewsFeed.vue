@@ -2,16 +2,22 @@
 import { ref, watch, onMounted } from 'vue';
 import NewsFeedEntry from './NewsFeedEntry.vue';
 import { useArticleStore } from '@/store/app';
+
+import { useThemeStore } from '@/store/app';
+
+const theme = useThemeStore();
 const store = useArticleStore();
 
 onMounted(()=> {
   store.getArticles()
+  store.loading = true;
 })
 
 const currentPage = ref()
 watch(currentPage, (newPage) => {
   store.currentPage = newPage;
   store.getArticles()
+  store.loading = true;
 });
 
 watch(store, ()=> {
@@ -20,23 +26,28 @@ watch(store, ()=> {
 </script>
 <template>
   <h1 class="text-center my-5">News Feed</h1>
-  <v-pagination
-      v-model="currentPage"
-      :length="store.pageCount"
-      circle
-    ></v-pagination>
-  <NewsFeedEntry 
-    v-for="article in store.articles"
-    :key="article.id"
-    :id="article.id"
-    :title="article.attributes.title"
-    :author="article.attributes.author"
-    :created="article.attributes.createdAt"
-    :content="article.attributes.content"
-  />
-  <v-pagination
-      v-model="currentPage"
-      :length="store.pageCount"
-      circle
-    ></v-pagination>
+  <div v-if="store.loading" class="d-flex justify-center my-5">
+    <v-progress-circular indeterminate :color="'green'"></v-progress-circular>
+  </div>
+  <div v-else>
+    <v-pagination
+        v-model="currentPage"
+        :length="store.pageCount"
+        circle
+      ></v-pagination>
+    <NewsFeedEntry
+      v-for="article in store.articles"
+      :key="article.id"
+      :id="article.id"
+      :title="article.attributes.title"
+      :author="article.attributes.author"
+      :created="article.attributes.createdAt"
+      :content="article.attributes.content"
+    />
+    <v-pagination
+        v-model="currentPage"
+        :length="store.pageCount"
+        circle
+      ></v-pagination>
+  </div>
 </template>

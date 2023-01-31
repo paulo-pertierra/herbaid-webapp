@@ -16,7 +16,7 @@ const disabled = ref(false);
 function validate() {
   store.submitLogin(identifier.value, password.value);
   setTimeout(() => {
-    store.error=""
+    localStorage.removeItem("user")
   }, 2500);
 }
 </script>

@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import store from ".";
+import { compileScript } from "vue/compiler-sfc";
 
 export const useThemeStore = defineStore("theme", {
   state: () => {
@@ -53,12 +55,12 @@ export const useUserAuthStore = defineStore("user", {
           } catch {
             errormsg = error.response.data.error.message;
           }
-          this.error = errormsg
+          this.error = errormsg;
         });
     },
     userLogout() {
       localStorage.removeItem("user");
-      location.reload()
+      location.reload();
     },
   },
   persist: true,
@@ -73,6 +75,7 @@ export const useRemedyStore = defineStore("remedy", {
 
       showAllRemedies: true,
       loading: true,
+      queryLoading: true,
       queriedremedies: [],
       querystring: "",
     };
@@ -88,6 +91,7 @@ export const useRemedyStore = defineStore("remedy", {
         .then((response) => {
           this.remedies = response.data.data;
           this.pageCount = response.data.meta.pagination.pageCount;
+          this.loading = false;
         });
     },
     getQueriedRemedies() {
@@ -99,6 +103,8 @@ export const useRemedyStore = defineStore("remedy", {
           if (this.queriedremedies.length) {
             this.showAllRemedies = false;
             console.log("Success?");
+            this.loading = false;
+            this.queryLoading = false;
           } else {
             Swal.fire({
               icon: "error",
@@ -134,6 +140,36 @@ export const useArticleStore = defineStore("article", {
         .then((response) => {
           this.articles = response.data.data;
           this.pageCount = response.data.meta.pagination.pageCount;
+          this.loading = false;
+        });
+    },
+  },
+});
+
+export const useDoctorStore = defineStore("doctor", {
+  state: () => {
+    return {
+      doctors: [],
+      loading: true,
+      pageCount: null,
+      currentPage: 1,
+
+    };
+  },
+  actions: {
+    getDoctors() {
+      axios
+        .get(
+          "/doctors?pagination[page]=" +
+            this.currentPage +
+            "&pagination[pageSize]=5&populate=display_photo"
+        )
+        .then((response) => {
+          this.doctors = response.data.data;
+          this.pageCount = response.data.meta.pagination.pageCount;
+          this.loading = false;
+        }).catch((error)=> {
+          console.log(error)
         });
     },
   },

@@ -1,14 +1,57 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onUpdated, watch, onMounted } from "vue";
+import axios from "axios";
 const show = ref(false);
 const props = defineProps(["id", "name", "content"]);
+const carousel = ref();
+
+const carouselload = ref(true);
+onUpdated(() => {
+  axios
+    .get(
+      "https://herbalaid-server.onrender.com/api/remedies/" +
+        props.id +
+        "?populate=carousel"
+    )
+    .then((response) => {
+      carousel.value = response.data.data.attributes.carousel.data;
+      console.log(carousel.value);
+      carouselload.value = false;
+    });
+});
+
+onMounted(()=> {
+  axios
+    .get(
+      "https://herbalaid-server.onrender.com/api/remedies/" +
+        props.id +
+        "?populate=carousel"
+    )
+    .then((response) => {
+      carousel.value = response.data.data.attributes.carousel.data;
+      console.log(carousel.value);
+      carouselload.value = false;
+    });
+})
 </script>
 
 <template>
   <v-card class="mx-auto my-5" max-width="1100" elevation="4">
     <v-card-title>
-      <h3 class="my-2 mx-auto text-center"> {{ name }}</h3>
+      <h3 class="my-2 mx-auto text-center">{{ name }}</h3>
     </v-card-title>
+
+    <div v-if="carouselload" class="d-flex justify-center my-5 mt-16">
+      <v-progress-circular indeterminate :color="'green'"></v-progress-circular>
+    </div>
+    <v-carousel v-else cycle height="100%" hide-delimiters show-arrows="hover">
+      <v-carousel-item
+        v-for="image in carousel"
+        height="350"
+        :src="image.attributes.url"
+        cover
+      ></v-carousel-item>
+    </v-carousel>
 
     <v-card-actions>
       <v-btn class="mx-auto" icon @click="show = !show">

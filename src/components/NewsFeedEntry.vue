@@ -1,41 +1,54 @@
 <script setup>
-import { ref,reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import formatter from "@/plugins/formatter";
 import NewsFeedComment from "./NewsFeedComment.vue";
 import axios from "axios";
-
+import { getCurrentInstance } from 'vue'
+const instance = getCurrentInstance();
 //START User Session
 const loggedin = ref(false);
-const credentials = JSON.parse(localStorage.getItem("user"))
-try { //I feel dirty again
-if (credentials.user.bearer.length) {
-  loggedin.value = true;
-}
+const credentials = JSON.parse(localStorage.getItem("user"));
+try {
+  //I feel dirty again
+  if (credentials.user.bearer.length) {
+    loggedin.value = true;
+  }
 } catch {
-  loggedin.value = false
+  loggedin.value = false;
 }
 //END User Session
 
 const props = defineProps(["title", "id", "author", "created", "content"]);
-
-console.log(props.id);
-
 const comments = ref();
-axios
+
+function getComment() {
+  axios
   .get("/comments/api::article.article:" + props.id + "/flat")
   .then((response) => {
     comments.value = response.data.data;
   });
+}
 const displayComments = reactive({
   text: "Show",
-  mode: false
-})
-
+  mode: false,
+});
 
 function toggleComments() {
-  displayComments.text = displayComments.text === "Hide" ? "Show" : "Hide"
-  displayComments.mode = displayComments.mode === true ? false : true
+  displayComments.text = displayComments.text === "Hide" ? "Show" : "Hide";
+  displayComments.mode = displayComments.mode === true ? false : true;
 }
+
+
+const usercomment = ref("");
+function postComment() {
+  axios.post("/comments/api::article.article:" + props.id + "", {
+    content: usercomment.value,
+  }).then(()=> {
+    getComment()
+  });
+  usercomment.value = "";
+}
+getComment()
 </script>
 
 <template>
@@ -51,23 +64,40 @@ function toggleComments() {
     </div>
     <hr class="my-1" />
     <div class="content" v-html="content"></div>
-    
+
     <div v-if="loggedin">
-      <h3 class="my-3">Comments: <v-btn @click="toggleComments()">{{ displayComments.text }}</v-btn></h3>
+      <h3 class="my-3">
+        Comments:
+        <v-btn @click="toggleComments()">{{ displayComments.text }}</v-btn>
+      </h3>
       <!-- Comments Section -->
       <NewsFeedComment
-      v-if="displayComments.mode"
-        v-for="comment in comments"
+        @update-comments="getComment(), getComment(), getComment()"
+        v-if="displayComments.mode"
+        v-for="(comment, index) in comments"
+        :article-id="props.id"
         :author="comment.author.name"
-        :id="comment.author.id"
+        :author-id="comment.author.id"
+        :comment-id="comment.id"
         :created="comment.createdAt"
         :content="comment.content"
       />
       <v-responsive v-if="displayComments.mode">
         <div class="d-flex justify-space-between">
-          <v-text-field label="Comment Here" variant="outlined" class="my-2"></v-text-field>
+          <v-text-field
+            v-model="usercomment"
+            label="Comment Here"
+            variant="outlined"
+            class="my-2"
+          ></v-text-field>
           <v-card-actions
-            ><v-btn class="mb-2 mt-n4 d-flex mr-auto" color="green" prepend-icon="mdi-comment" variant="outlined" height="56"
+            ><v-btn
+              class="mb-2 mt-n4 d-flex mr-auto"
+              color="green"
+              prepend-icon="mdi-comment"
+              variant="outlined"
+              height="56"
+              @click="postComment()"
               >Submit</v-btn
             ></v-card-actions
           >

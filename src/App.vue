@@ -76,7 +76,6 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
               ><v-icon size="x-large">mdi-account-circle</v-icon></v-btn
             >
           </template>
-
           <v-list>
             <v-list-item>
               <v-list-item-title class="clickable" @click="user.userLogout()"

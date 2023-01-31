@@ -4,7 +4,10 @@ import { ref, watch, onMounted } from "vue";
 import RemedyEntry from "./RemedyEntry.vue";
 import RemedyQueried from "./RemedyQueried.vue";
 
+import { useThemeStore } from "@/store/app";
 import { useRemedyStore } from "@/store/app";
+
+const theme = useThemeStore();
 const store = useRemedyStore();
 
 //OnMounted
@@ -17,6 +20,7 @@ onMounted(() => {
 //state keys instead of the entire state. 🤮
 const currentPage = ref();
 watch(currentPage, (newPage) => {
+  store.loading = true;
   store.currentPage = newPage;
   store.getRemedies();
   window.scrollTo(0, 0);
@@ -24,7 +28,6 @@ watch(currentPage, (newPage) => {
 
 //Not so elegant search box function using Pinia
 watch(store, () => {
-  store.loading = false;
   if (!store.querystring.length) {
     store.showAllRemedies = true;
   } else {
@@ -47,8 +50,8 @@ watch(store, () => {
     ></v-text-field>
   </div>
 
-  <div v-if="store.loading" class="d-flex justify-center my-5">
-    <v-progress-circular indeterminate color="primary"></v-progress-circular>
+  <div v-if="store.loading" class="d-flex justify-center my-5 mt-16">
+    <v-progress-circular indeterminate :color="'green'"></v-progress-circular>
   </div>
 
   <div v-else-if="store.showAllRemedies">
@@ -65,12 +68,17 @@ watch(store, () => {
     ></v-pagination>
   </div>
   <div v-else>
-    <RemedyQueried
-      v-for="remedy in store.queriedremedies"
-      :name="remedy.name"
-      :content="remedy.content"
-      :id="remedy.id"
-    />
+    <div v-if="store.queryLoading" class="d-flex justify-center my-5 mt-16">
+      <v-progress-circular indeterminate :color="'green'"></v-progress-circular>
+    </div>
+    <div v-else>
+      <RemedyQueried
+        v-for="remedy in store.queriedremedies"
+        :name="remedy.name"
+        :content="remedy.content"
+        :id="remedy.id"
+      />
+    </div>
   </div>
 </template>
 

@@ -10,14 +10,14 @@ const props = defineProps(["carousel", "name", "content"]);
       <h3 class="my-2 mx-auto text-center"> {{ name }}</h3>
     </v-card-title>
 
-    <v-carousel cycle height="100%" hide-delimiters show-arrows="hover">
-      <v-carousel-item
-        v-for="image in props.carousel"
-        height="350"
-        :src="image.attributes.url"
-        cover
-      ></v-carousel-item>
-    </v-carousel>
+      <v-carousel cycle height="100%" hide-delimiters show-arrows="hover">
+        <v-carousel-item
+          v-for="image in props.carousel"
+          height="350"
+          :src="image.attributes.url"
+          cover
+        ></v-carousel-item>
+      </v-carousel>
 
     <v-card-actions>
       <v-btn class="mx-auto" icon @click="show = !show">

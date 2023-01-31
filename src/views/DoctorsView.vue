@@ -1,3 +1,7 @@
 <template>
-  <h1>Doctors View</h1>
+  <DoctorsComponent />
 </template>
+
+<script setup>
+import DoctorsComponent from '@/components/DoctorsComponent.vue'
+</script>
