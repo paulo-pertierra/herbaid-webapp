@@ -1,1 +1,4 @@
-<template><h1>Hi</h1></template>
+<template>
+  <h1 class="text-center my-5">About Us</h1>
+  
+</template>

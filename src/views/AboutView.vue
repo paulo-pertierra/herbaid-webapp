@@ -1,6 +1,8 @@
 <template>
-  <h1 class="text-center my-5">About Us</h1>
+  <AboutComponent />
 </template>
 
-<script>
+<script setup>
+import AboutComponent from '@/components/AboutComponent.vue';
+
 </script>

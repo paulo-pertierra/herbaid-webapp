@@ -206,4 +206,7 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
 .clickable:hover {
   cursor: pointer;
 }
+.swal2-container {
+  z-index: 9999;
+}
 </style>
