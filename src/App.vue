@@ -65,13 +65,13 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
       <div v-if="!loggedin">
         <v-btn prepend-icon="mdi-account" @click="loginDialog = true"
           >Login
-          <v-dialog v-model="loginDialog">
+          <v-dialog v-model="loginDialog" z-index="2500">
             <LoginView />
           </v-dialog>
         </v-btn>
         <v-btn prepend-icon="mdi-account-star" @click="signupDialog = true"
           >Sign Up
-          <v-dialog v-model="signupDialog">
+          <v-dialog v-model="signupDialog" z-index="2500">
             <SignupView />
           </v-dialog>
         </v-btn>
