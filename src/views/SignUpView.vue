@@ -228,6 +228,7 @@ function submitInfo() {
 
 <style>
 .swal2-container {
+  position: absolute;
   z-index: 99999;
 }
 </style>

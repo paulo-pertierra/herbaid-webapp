@@ -207,6 +207,7 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
   cursor: pointer;
 }
 .swal2-container {
+  position: absolute;
   z-index: 99999;
 }
 </style>
