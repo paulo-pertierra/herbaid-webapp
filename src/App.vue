@@ -63,13 +63,13 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
       >
       <v-spacer></v-spacer>
       <div v-if="!loggedin">
-        <v-btn prepend-icon="mdi-account" @click="loginDialog = true"
+        <v-btn class="deeplog" prepend-icon="mdi-account" @click="loginDialog = true"
           >Login
           <v-dialog v-model="loginDialog" z-index="2500">
             <LoginView />
           </v-dialog>
         </v-btn>
-        <v-btn prepend-icon="mdi-account-star" @click="signupDialog = true"
+        <v-btn class="deeplog" prepend-icon="mdi-account-star" @click="signupDialog = true"
           >Sign Up
           <v-dialog v-model="signupDialog" z-index="2500">
             <SignupView />
@@ -206,7 +206,7 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
 .clickable:hover {
   cursor: pointer;
 }
-.swal2-container {
+.deeplog :deep(.swal2-container) {
   position: absolute;
   z-index: 99999;
 }
