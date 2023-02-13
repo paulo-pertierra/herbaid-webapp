@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 import LoginView from "./views/LoginView.vue";
 import SignupView from "./views/SignUpView.vue";
