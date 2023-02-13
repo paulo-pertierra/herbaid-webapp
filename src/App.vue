@@ -6,19 +6,19 @@ import SignupView from "./views/SignUpView.vue";
 
 import { useThemeStore } from "./store/app"; //I wanted a persisted theme
 import { useUserAuthStore, useLocaleStore } from "./store/app";
-import store from "./store";
 //START User session
 const user = useUserAuthStore();
 const loggedin = ref(false);
-const credentials = JSON.parse(localStorage.getItem("user"))
+const credentials = JSON.parse(localStorage.getItem("user"));
 const i18n = useLocaleStore();
-i18n.getLocales()
-try { //I feel dirty
-if (credentials.user.bearer.length) {
-  loggedin.value = true;
-}
+i18n.getLocales();
+try {
+  //I feel dirty
+  if (credentials.user.bearer.length) {
+    loggedin.value = true;
+  }
 } catch {
-  loggedin.value = false
+  loggedin.value = false;
 }
 //END User Session
 //START Theming
@@ -38,16 +38,11 @@ const signupDialog = ref(false);
 //START Navigation Bar
 const drawer = ref(false);
 const group = ref(null);
-
-watch((group) => {
-  drawer.value = false;
-});
 //END Navigation Bar
 
 //START Footer
 const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
 //END Footer
-
 
 //START Locale
 
@@ -63,13 +58,19 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
       >
       <v-spacer></v-spacer>
       <div v-if="!loggedin">
-        <v-btn class="deeplog" prepend-icon="mdi-account" @click="loginDialog = true"
+        <v-btn
+          class="deeplog"
+          prepend-icon="mdi-account"
+          @click="loginDialog = true"
           >Login
           <v-dialog v-model="loginDialog" z-index="2500">
             <LoginView />
           </v-dialog>
         </v-btn>
-        <v-btn class="deeplog" prepend-icon="mdi-account-star" @click="signupDialog = true"
+        <v-btn
+          class="deeplog"
+          prepend-icon="mdi-account-star"
+          @click="signupDialog = true"
           >Sign Up
           <v-dialog v-model="signupDialog" z-index="2500">
             <SignupView />
@@ -92,14 +93,6 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
           </v-list>
         </v-menu>
       </div>
-      <v-btn
-        :prepend-icon="
-          theme.mode === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'
-        "
-        @click="changeTheme()"
-      >
-        <div class="d-none d-sm-flex">Theme</div>
-      </v-btn>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute bottom temporary>
       <v-list nav dense>
@@ -108,11 +101,26 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
           active-class="deep-purple--text text--accent-4"
         >
           <v-list-item>
+            <div class="d-flex justify-content text-center">
+              <h3>Pages</h3>
+            </div>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-title>
+              <v-icon class="mr-2">mdi-home</v-icon>
+              <RouterLink
+                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                to="/"
+                >Home Page</RouterLink
+              >
+            </v-list-item-title>
+          </v-list-item>
+          <v-list-item>
             <v-list-item-title>
               <v-icon class="mr-2">mdi-post</v-icon>
               <RouterLink
                 style="text-decoration: none; color: inherit; font-size: 1.2em"
-                to="/"
+                to="/newsfeed"
                 >News Feed</RouterLink
               >
             </v-list-item-title>
@@ -150,19 +158,46 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
               </RouterLink>
             </v-list-item-title>
           </v-list-item>
+          <v-list-item>
+            <div class="d-flex justify-content mt-5">
+              <h3>User Settings</h3>
+            </div>
+            <div class="d-flex justify-content mt-2">
+              <v-icon class="mr-2">mdi-translate</v-icon>
+              <h4 class="m">Languages</h4>
+            </div>
+            <div style="height: auto; overflow: auto" class="mt-2">
+              <v-btn
+                class="my-1"
+                width="100%"
+                v-for="locale in i18n.locales"
+                @click="i18n.changeLocale(locale.code)"
+                :key="locale.id"
+              >
+                {{ locale.name }}
+              </v-btn>
+            </div>
+            <div class="d-flex justify-content mt-2">
+              <v-icon class="mr-2">mdi-brightness-6</v-icon>
+              <h4 class="m">Theme</h4>
+            </div>
+            <v-btn class="my-1"
+            width="100%"
+              :prepend-icon="
+                theme.mode === 'light'
+                  ? 'mdi-weather-sunny'
+                  : 'mdi-weather-night'
+              "
+              @click="changeTheme()"
+            >
+              <div class="d-none d-sm-flex">{{ theme.mode }}</div>
+            </v-btn>
+          </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
     <v-main>
       <v-container>
-        <div class="d-flex justify-content">
-          <h3 class="mx-auto">Languages</h3>
-        </div>
-        <div class="d-flex justify-center">
-          <v-btn class="mx-4 my-4" v-for="locale in i18n.locales" @click="i18n.changeLocale(locale.code)">
-            {{ locale.name }}
-          </v-btn>
-        </div>
         <router-view />
       </v-container>
     </v-main>
