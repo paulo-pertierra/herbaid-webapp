@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 import LoginView from "./views/LoginView.vue";
 import SignupView from "./views/SignUpView.vue";
-
+import router from "./router";
 import { useThemeStore } from "./store/app"; //I wanted a persisted theme
 import { useUserAuthStore, useLocaleStore } from "./store/app";
 //START User session
@@ -51,11 +51,15 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
 
 <template>
   <v-app :theme="theme.mode">
-    <v-app-bar elevation="2" :color="theme.color" absolute>
+    <v-app-bar style="color: white" elevation="2" :color="theme.color" absolute>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title class="d-none d-sm-flex"
-        ><h3>Herbal Aid</h3></v-app-bar-title
-      >
+        ><v-img
+          @click="router.push('/')"
+          src="@/assets/logo-front.png"
+          width="200"
+        ></v-img
+      ></v-app-bar-title>
       <v-spacer></v-spacer>
       <div v-if="!loggedin">
         <v-btn
@@ -106,57 +110,82 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
             </div>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>
-              <v-icon class="mr-2">mdi-home</v-icon>
+            <v-btn
+              width="100%"
+              variant="outlined"
+              @click="router.push('/')"
+              class="text-left"
+            >
+              <v-icon class="mr-1">mdi-home</v-icon>
               <RouterLink
-                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                style="text-decoration: none; color: inherit; font-size: 1em"
                 to="/"
                 >Home Page</RouterLink
               >
-            </v-list-item-title>
+            </v-btn>
           </v-list-item>
           <v-list-item>
-            <v-list-item-title>
-              <v-icon class="mr-2">mdi-post</v-icon>
+            <v-btn
+              block="true"
+              variant="outlined"
+              @click="router.push('/newsfeed')"
+              class="text-left"
+            >
+              <v-icon class="mr-1">mdi-post</v-icon>
               <RouterLink
-                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                style="text-decoration: none; color: inherit; font-size: 1em"
                 to="/newsfeed"
                 >News Feed</RouterLink
               >
-            </v-list-item-title>
+            </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>
-              <v-icon class="mr-2">mdi-sprout</v-icon>
+            <v-btn
+              block="true"
+              variant="outlined"
+              @click="router.push('/remedies')"
+              class="text-left"
+            >
+              <v-icon class="mr-1">mdi-sprout</v-icon>
               <RouterLink
-                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                style="text-decoration: none; color: inherit; font-size: 1em"
                 to="/remedies"
                 >Remedies Directory</RouterLink
               >
-            </v-list-item-title>
+            </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>
-              <v-icon class="mr-2">mdi-doctor</v-icon>
+            <v-btn
+              block="true"
+              variant="outlined"
+              @click="router.push('/doctors')"
+              class="text-left"
+            >
+              <v-icon class="mr-1">mdi-doctor</v-icon>
               <RouterLink
-                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                style="text-decoration: none; color: inherit; font-size: 1em"
                 to="/doctors"
                 >Doctors Directory</RouterLink
               >
-            </v-list-item-title>
+            </v-btn>
           </v-list-item>
 
           <v-list-item>
-            <v-list-item-title>
+            <v-btn
+              block="true"
+              variant="outlined"
+              @click="router.push('/about')"
+              class="text-left"
+            >
               <v-icon class="mr-2">mdi-information</v-icon>
               <RouterLink
-                style="text-decoration: none; color: inherit; font-size: 1.2em"
+                style="text-decoration: none; color: inherit; font-size: 1em"
                 to="/about"
                 >About Us
               </RouterLink>
-            </v-list-item-title>
+            </v-btn>
           </v-list-item>
           <v-list-item>
             <div class="d-flex justify-content mt-5">
@@ -166,10 +195,12 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
               <v-icon class="mr-2">mdi-translate</v-icon>
               <h4 class="m">Languages</h4>
             </div>
-            <div style="height: auto; overflow: auto" class="mt-2">
+            <div style="height: auto; overflow: auto" class="mt-1">
               <v-btn
-                class="my-1"
-                width="100%"
+                block="true"
+                variant="outlined"
+                @click.prevent
+                class="text-left my-4"
                 v-for="locale in i18n.locales"
                 @click="i18n.changeLocale(locale.code)"
                 :key="locale.id"
@@ -181,8 +212,11 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
               <v-icon class="mr-2">mdi-brightness-6</v-icon>
               <h4 class="m">Theme</h4>
             </div>
-            <v-btn class="my-1"
-            width="100%"
+            <v-btn
+              class="mt-4"
+              block="true"
+              variant="outlined"
+              @click.prevent
               :prepend-icon="
                 theme.mode === 'light'
                   ? 'mdi-weather-sunny'
@@ -211,6 +245,7 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
       >
         <v-card-text>
           <v-btn
+            style="color: white"
             v-for="icon in icons"
             :key="icon"
             class="mx-4 white--text"
@@ -223,13 +258,13 @@ const icons = ["mdi-facebook", "mdi-twitter", "mdi-linkedin"];
           </v-btn>
         </v-card-text>
 
-        <v-card-text class="white--text pt-0">
+        <v-card-text class="white--text pt-0" style="color: white">
           Made with love and Vue by Universidad de Dagupan
         </v-card-text>
 
         <v-divider></v-divider>
 
-        <v-card-text class="white--text">
+        <v-card-text class="white--text" style="color: white">
           {{ new Date().getFullYear() }} — <strong>Herbal Aid</strong>
         </v-card-text>
       </v-card>

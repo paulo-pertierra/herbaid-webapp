@@ -1,10 +1,8 @@
 // Utilities
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import store from ".";
-import { compileScript } from "vue/compiler-sfc";
 
 export const useThemeStore = defineStore("theme", {
   state: () => {
@@ -16,7 +14,7 @@ export const useThemeStore = defineStore("theme", {
   actions: {
     changeTheme() {
       this.mode = this.mode === "light" ? "dark" : "light";
-      this.color = this.color === "green" ? "#02601e" : "green";
+      this.color = this.color === "#729343" ? "#729343" : "#729343";
     },
   },
   persist: true,

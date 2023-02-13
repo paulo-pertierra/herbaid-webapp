@@ -3,9 +3,6 @@ import { ref, watch, onMounted } from 'vue';
 import NewsFeedEntry from './NewsFeedEntry.vue';
 import { useArticleStore, useLocaleStore } from '@/store/app';
 
-import { useThemeStore } from '@/store/app';
-
-const theme = useThemeStore();
 const store = useArticleStore();
 const i18n = useLocaleStore();
 i18n.getLocales()
