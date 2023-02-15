@@ -1,4 +1,4 @@
 <template>
-  <h1 class="text-center my-5">About Us</h1>
-  
+  <v-img src="/devs.jpg" alt=""></v-img>
+  <v-img src="/about.jpg" width="500px" class="mx-auto"></v-img>
 </template>

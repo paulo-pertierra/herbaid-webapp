@@ -24,8 +24,8 @@ watch(store, ()=> {
 })
 
 watch(i18n, ()=> {
-  store.getArticles(i18n.locale)
-  console.log("change")
+  store.currentPage = 1;
+  store.getArticles(i18n.locale);
 })
 </script>
 <template>

@@ -32,11 +32,11 @@ watch(i18n, () => {
   >
     <p class="text-h4">{{ heroIntro }}</p>
   </v-responsive>
-  <div class="text-center">
+  <div class="text-center mt-10">
     <v-btn
       @click="router.push('/newsfeed')"
       :color="theme.color"
-      class="ma-5"
+      class="mx-2 my-1"
       variant="outlined"
       stacked
       prepend-icon="mdi-post"
@@ -46,7 +46,7 @@ watch(i18n, () => {
     <v-btn
       @click="router.push('/remedies')"
       :color="theme.color"
-      class="ma-5"
+      class="mx-2 my-1"
       variant="outlined"
       stacked
       prepend-icon="mdi-sprout"
@@ -56,7 +56,7 @@ watch(i18n, () => {
     <v-btn
       @click="router.push('/doctors')"
       :color="theme.color"
-      class="ma-5"
+      class="mx-2 my-1"
       variant="outlined"
       stacked
       prepend-icon="mdi-doctor"
@@ -66,7 +66,7 @@ watch(i18n, () => {
     <v-btn
       @click="router.push('/about')"
       :color="theme.color"
-      class="ma-5"
+      class="mx-2 my-1"
       variant="outlined"
       stacked
       prepend-icon="mdi-information"

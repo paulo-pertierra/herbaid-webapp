@@ -2,3 +2,7 @@
   position: absolute;
   z-index: 10000000 !important;
 }
+#app {
+  background: url('/src/assets/logo.png') no-repeat center center fixed !important;
+  background-size: cover;
+}
